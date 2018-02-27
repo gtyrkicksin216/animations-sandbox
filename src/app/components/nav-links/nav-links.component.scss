@@ -1,0 +1,14 @@
+.nav-links {
+  outline: none !important;
+  display: block;
+  margin: 20px;
+  padding: 10px 5px;
+  text-transform: uppercase;
+  min-width: 100px;
+  background: lightyellow;
+  border: none;
+  box-shadow: 1px 1px 5px lightgrey;
+  &:hover {
+    box-shadow: 2px 2px 5px lightgrey;
+  }
+}

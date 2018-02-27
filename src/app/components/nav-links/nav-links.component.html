@@ -1,0 +1,8 @@
+<button
+  class="nav-links"
+  role="button"
+  *ngFor="let button of buttons"
+  [routerLink]="button.path"
+>
+  {{ button.viewName }}
+</button>

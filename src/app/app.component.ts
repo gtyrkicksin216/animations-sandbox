@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 // Import your animations
+import { routerAnimations } from '@constants/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [  ], // add any animations here
+  animations: [ routerAnimations ], // add any animations here
 })
 export class AppComponent {
   title = 'app';
@@ -18,4 +19,13 @@ export class AppComponent {
    * return localVar.activatedRouteData ? localVar.activatedRouteData.name : '';
    * to log the state changes
    */
+
+   getState(route) {
+     console.log(route.activatedRouteData.state);
+     return route.activatedRouteData ? route.activatedRouteData.state : '';
+   }
+
+   logAnimation(e) {
+     console.log(e);
+   }
 }
