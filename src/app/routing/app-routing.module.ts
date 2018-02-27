@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ComponentsModule } from '@components/components.module';
 
-import { ROUTES } from './routes';
+import { ROUTES } from '@routing/routes';
 import { SliderComponent } from '@components/slider/slider.component';
 import { SpinnerComponent } from '@components/spinner/spinner.component';
 import { ShrinkComponent } from '@components/shrink/shrink.component';
