@@ -43,7 +43,14 @@ export const SLIDER = animation([
 export const routerAnimations =
   trigger('routeAnimations', [
     transition('slider => spinner', [
-      useAnimation(SLIDER)
-    ])
+      useAnimation(SLIDER),
+      animateChild(),
+    ]),
   ]);
 
+// export const routerAnimations =
+//   trigger('routeAnimations', [
+//     transition('slider => spinner', [
+//       animateChild(),
+//     ])
+//   ]);
