@@ -1,3 +1,8 @@
-<div class="slider" [@routeAnimations]>
+<div
+  class="slider"
+  [@slideAnimation]
+  (@slideAnimation.start)="logAction($event)"
+  (@slideAnimation.done)="logAction($event)"
+  >
 
 </div>
