@@ -1,11 +1,11 @@
 import { Component, HostBinding } from '@angular/core';
-import { fadeAnimation } from '@constants/animations';
+// import { fadeAnimation } from '@constants/animations';
 
 @Component({
   selector: 'shrink',
   templateUrl: './shrink.component.html',
   styleUrls: [ './shrink.component.scss' ],
-  animations: [ fadeAnimation ],
+  // animations: [ fadeAnimation ],
 })
 
 export class ShrinkComponent {

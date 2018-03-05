@@ -2,7 +2,8 @@
   class="nav-links"
   role="button"
   *ngFor="let button of buttons"
-  [routerLink]="button.path"
->
+  (click)="goToPage(button.path)"
+  >
+  <!-- [routerLink]="button.path" -->
   {{ button.viewName }}
 </button>
