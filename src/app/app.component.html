@@ -6,10 +6,11 @@
 
   <div
     class="container"
-    [@routeAnimations]="getState(route)"
-    (@routeAnimations.start)="logAnimation($event)"
-    (@routeAnimations.done)="logAnimation($event)"
-  >
+    [@routeAnimation]="getState(route)"
+    >
+    <!-- [@routeAnimation]="getState(route)" -->
+    <!-- (@routeAnimations.start)="logAnimation($event)"
+    (@routeAnimations.done)="logAnimation($event)" -->
     <router-outlet #route="outlet"></router-outlet>
   </div>
 

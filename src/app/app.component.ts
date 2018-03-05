@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-// Import your animations
+import { Component, HostBinding } from '@angular/core';
 import { routerAnimations } from '@constants/animations';
+// Import your animations
+// import { routerAnimation } from '@constants/animations';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ import { routerAnimations } from '@constants/animations';
 })
 export class AppComponent {
   title = 'app';
+
+  // @HostBinding('@routerAnimation') routerAnimations;
 
   /**
    * To use your component's state you will have to use a local variable on your
