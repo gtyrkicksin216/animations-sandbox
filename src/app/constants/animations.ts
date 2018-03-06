@@ -10,6 +10,7 @@ import {
   animateChild,
   AnimationOptions,
   group,
+  stagger,
 } from '@angular/animations';
 
 /**
@@ -46,9 +47,14 @@ export const fadeAnimation = animation([
   animate('{{ time }} {{ timingFunc }}', style({ opacity: '{{ to }}' })),
 ]);
 
-export const slideAnimation = animation([
+export const slideLeftAnimation = animation([
   style({ left: '{{ from }}' }),
   animate('{{ time }} {{ timingFunc }}', style({ left: '{{ to }}' })),
+]);
+
+export const slideTopAnimation = animation([
+  style({ top: '{{ from }}' }),
+  animate('{{ time }} {{ timingFunc }}', style({ top: '{{ to }}' })),
 ]);
 
 export const spinAnimation = animation([
@@ -60,6 +66,11 @@ export const spinAnimation = animation([
 export const popAnimation = animation([
   style({ transform: 'translate(-50%, -50%) scale({{ fromSize }})' }),
   animate('{{ time }} {{ timingFunc }}', style({ transform: 'translate(-50%, -50%) scale({{ toSize }})' })),
+]);
+
+export const widthAnimation = animation([
+  style({ width: '{{ from }}' }),
+  animate('{{ time }} {{ timingFunc }}', style({ width: '{{ to }}' })),
 ]);
 
 /**
@@ -85,6 +96,8 @@ export const routerAnimations =
       query('.slider', style({ left: '-50%' }), { optional: true }),
       query('.spinner', style({ transform: `rotate(0) scale(0)` }), { optional: true }),
       query('.shrink', style({ transform: `scale(0)` }), { optional: true }),
+      query('.child-stagger', style({ top: '-100%' }), { optional: true }),
+      query('.grow-in', style({ width: '0' }), { optional: true }),
 
       /**
        * Query for the element leaving the page
@@ -104,11 +117,12 @@ export const routerAnimations =
           /**
            * This is where you will reuse your reusable animation
            */
-          useAnimation(slideAnimation, {
+          useAnimation(slideLeftAnimation, {
             /**
              * If you have interpolated strings in your animation you can set those parameters here
              */
             params: {
+              origin: 'left',
               from: '50%',
               to: '250%',
               time: '800ms',
@@ -141,6 +155,31 @@ export const routerAnimations =
             },
           }),
         ], { optional: true }),
+        // TODO Fix this group running oddly
+        group([
+          query('.grow-in', [
+            stagger('300ms', [
+              useAnimation(widthAnimation, {
+                params: {
+                  from: '85%',
+                  to: '0',
+                  time: '300ms',
+                  timingFunc: 'ease',
+                },
+              }),
+            ]),
+          ], { optional: true }),
+          query('.child-stagger', [
+            useAnimation(slideTopAnimation, {
+              params: {
+                from: '50%',
+                to: '150%',
+                time: '800ms',
+                timingFunc: 'ease',
+              },
+            }),
+          ], { optional: true, delay: '600ms' }),
+        ]),
       ], { optional: true }),
 
       /**
@@ -152,8 +191,9 @@ export const routerAnimations =
       query(':enter', [
         style({ zIndex: 1000 }),
         query('.slider', [
-          useAnimation(slideAnimation, {
+          useAnimation(slideLeftAnimation, {
             params: {
+              origin: 'left',
               from: '-50%',
               to: '50%',
               time: '600ms',
@@ -182,6 +222,40 @@ export const routerAnimations =
             },
           }),
         ], { optional: true }),
+        // query('.child-stagger', [
+          // useAnimation(slideTopAnimation, {
+          //   params: {
+          //     from: '-100%',
+          //     to: '50%',
+          //     time: '600ms',
+          //     timingFunc: 'ease',
+          //   },
+          // }),
+        // ], { optional: true }),
+        group([
+          query('.child-stagger', [
+            useAnimation(slideTopAnimation, {
+              params: {
+                from: '-100%',
+                to: '50%',
+                time: '600ms',
+                timingFunc: 'ease',
+              },
+            }),
+          ], { optional: true }),
+          query('.grow-in', [
+            stagger('300ms', [
+              useAnimation(widthAnimation, {
+                params: {
+                  from: '0',
+                  to: '85%',
+                  time: '300ms',
+                  timingFunc: 'ease',
+                },
+              }),
+            ]),
+          ], { optional: true, delay: '600ms' }),
+        ]),
       ], { optional: true }),
 
     ]),

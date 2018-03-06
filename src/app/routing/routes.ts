@@ -3,6 +3,7 @@ export const ROUTES = {
   SLIDER: 'slider',
   SPINNER: 'spinner',
   SHRINK: 'shrink',
+  CHILD_STAGGER: 'child-stagger',
 };
 
 export const ROUTE_ARRAY: Array<string> = [
@@ -10,4 +11,5 @@ export const ROUTE_ARRAY: Array<string> = [
   ROUTES.SLIDER,
   ROUTES.SPINNER,
   ROUTES.SHRINK,
+  ROUTES.CHILD_STAGGER,
 ];

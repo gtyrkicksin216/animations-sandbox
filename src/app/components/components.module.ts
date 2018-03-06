@@ -7,6 +7,7 @@ import { NavLinksComponent } from '@components/nav-links/nav-links.component';
 import { ShrinkComponent } from '@components/shrink/shrink.component';
 import { SliderComponent } from '@components/slider/slider.component';
 import { SpinnerComponent } from '@components/spinner/spinner.component';
+import { ChildStaggerComponent } from '@components/child-stagger/child-stagger.component';
 
 @NgModule({
   imports: [
@@ -18,12 +19,14 @@ import { SpinnerComponent } from '@components/spinner/spinner.component';
     ShrinkComponent,
     SliderComponent,
     SpinnerComponent,
+    ChildStaggerComponent,
   ],
   exports: [
     NavLinksComponent,
     ShrinkComponent,
     SliderComponent,
     SpinnerComponent,
+    ChildStaggerComponent,
   ],
 })
 

@@ -1,0 +1,27 @@
+
+.child-stagger {
+  position: absolute;
+  height: 400px;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: lavender;
+  padding: 20px 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  li {
+    display: block;
+    height: 80px;
+    width: 85%;
+    margin: 30px auto;
+    border-radius: 3px;
+    background: paleturquoise;
+    &.grow-in {
+      position: relative;
+    }
+  }
+}
