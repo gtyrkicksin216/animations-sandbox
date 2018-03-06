@@ -2,6 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 // import { fadeAnimation } from '@constants/animations';
 
 @Component({
+  // tslint:disable-next-line
   selector: 'slider',
   templateUrl: './slider.component.html',
   styleUrls: [ './slider.component.scss' ],

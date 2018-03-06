@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
+  // tslint:disable-next-line
   selector: 'nav-links',
   templateUrl: './nav-links.component.html',
   styleUrls: [ './nav-links.component.scss' ],

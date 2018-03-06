@@ -35,94 +35,155 @@ import {
    * Then you would use `useAnimation(animationName)` after you declare your trigger;
    */
 
+/**
+ * declare all of your constants that you would want to use as your reusable animations
+ * ie. any animation that would run both ways (:enter and :leave)
+ */
+export const centerAround = 'translate(-50%, -50%)';
+
 export const fadeAnimation = animation([
   style({ opacity: '{{ from }}' }),
   animate('{{ time }} {{ timingFunc }}', style({ opacity: '{{ to }}' })),
 ]);
 
+export const slideAnimation = animation([
+  style({ left: '{{ from }}' }),
+  animate('{{ time }} {{ timingFunc }}', style({ left: '{{ to }}' })),
+]);
+
+export const spinAnimation = animation([
+  style({ transform: 'translate(-50%, -50%) rotate(0deg) scale({{ fromSize }})' }),
+  animate('{{ time }} {{ timingFunc }}',
+    style({ transform: 'translate(-50%, -50%) rotate({{ rotation }}) scale({{ toSize }})' })),
+]);
+
+export const popAnimation = animation([
+  style({ transform: 'translate(-50%, -50%) scale({{ fromSize }})' }),
+  animate('{{ time }} {{ timingFunc }}', style({ transform: 'translate(-50%, -50%) scale({{ toSize }})' })),
+]);
 
 /**
- * The above function does the same as the two below, but allo
+ * Set up the main animation that you will bind to your host
  */
-// export const fadeIn = animation([
-//   style({ opacity: 0 }),
-//   animate('{{time}}', style({ opacity: 1 })),
-// ]);
-
-// export const fadeOut = animation([
-//   style({ opacity: 1 }),
-//   animate('{{time}}', style({ opacity: 0 })),
-// ]);
-
-//#region
-// export const fadeAnimation =
-//   trigger('fadeAnimation', [
-//     transition(':enter', [
-//       // style({ opacity: 0 }),
-//       // animate('2000ms ease', style({ opacity: 1 })),
-//       useAnimation(fadeIn),
-//     ]),
-//     transition(':leave', [
-//       // style({ opacity: 1 }),
-//       // animate('2000ms ease', style({ opacity: 0 }))
-//       useAnimation(fadeOut),
-//     ])
-//   ]);
-
-// export const sliderAnimation =
-//   trigger('slideAnimation', [
-//     transition(':enter', [
-//       style({ opacity: 0 }),
-//       animate('2000ms ease', style({ opacity: 1 }))
-//     ]),
-//     transition(':leave', [
-//       style({ opacity: 1 }),
-//       animate('2000ms ease', style({ opacity: 0 })),
-//     ]),
-//   ]);
-
-// export const spinnerAnimation =
-//   trigger('spinAnimation', [
-//     transition(':enter', [
-//       style({ transform: 'rotate(0deg)', transformOrigin: 'center', opacity: 0 }),
-//       animate('2000ms ease', style({ transform: 'rotate(360deg)', transformOrigin: 'center', opacity: 1 })),
-//     ]),
-//     transition(':leave', [
-//       style({ transform: 'rotate(0deg)', transformOrigin: 'center' }),
-//       animate('2000ms ease', style({ transform: 'rotate(-360deg)', transformOrigin: 'center', opacity: 0 })),
-//     ]),
-//   ]);
-//#endregion
-
-// This is now working but it is waiting 2000ms before actually running the switch
 export const routerAnimations =
   trigger('routeAnimation', [
-    transition('* <=> *', [ // Any state to any state
-      query(':enter', [ // look for anything entering or leaving inside of bound element
-        // style({ opacity: 0 }), // set an initial style
-        // animate('2000ms ease', style({ opacity: 1 })), // animate when enter
-        // or use the fadeIn animation to do this
-        useAnimation(fadeAnimation, { // Use your predefined animation (top of file)
-          params: { // you can use the params?: to set any interpolation you use
-            from: 0,
-            to: 1,
-            time: '500ms',
-            timingFunc: 'ease',
-          }
-        }),
-      ], { optional: true }), // optional? allows you to use animations on things that may already exist/not exist and will eror otherwise
-      // Do the same for leave
+    /**
+     * When the transition will fire
+     * * <=> * = any state to any state
+     * * => void = :leave
+     * void => * = :enter
+     * [state] => [state] = specific state to another state
+     * [state] <=> [state] = specific state to another state
+     * [state] <= [state] = specific state to another state
+     *
+     */
+    transition('* <=> *', [
+
+      /**
+       * query for specific elements or states and set the intial values
+       */
+      query('.slider', style({ left: '-50%' }), { optional: true }),
+      query('.spinner', style({ transform: `rotate(0) scale(0)` }), { optional: true }),
+      query('.shrink', style({ transform: `scale(0)` }), { optional: true }),
+
+      /**
+       * Query for the element leaving the page
+       * *** THIS MUST COME FIRST ***
+       */
       query(':leave', [
-        useAnimation(fadeAnimation, {
-          params: {
-            from: 1,
-            to: 0,
-            time: '500ms',
-            timingFunc: 'ease',
-          }
-        }),
+        /**
+         * Query for your specific elements to apply the animations to:
+         * -> Querying for class or ID names using query('.class')/query('#id')
+         * -> Querying for newly inserted/removed elements using query(":enter")/query(":leave")
+         * -> Querying all currently animating elements using query(":animating")
+         * -> Querying elements that contain an animation trigger using query("@triggerName")
+         * -> Querying all elements that contain an animation triggers using query("@*")
+         * -> Including the current element into the animation sequence using query(":self")
+         */
+        query('.slider', [
+          /**
+           * This is where you will reuse your reusable animation
+           */
+          useAnimation(slideAnimation, {
+            /**
+             * If you have interpolated strings in your animation you can set those parameters here
+             */
+            params: {
+              from: '50%',
+              to: '250%',
+              time: '800ms',
+              timingFunc: 'ease',
+            },
+          }),
+          /**
+           * For every query you SHOULD use { optional: true }
+           * Query looks for elements in the DOM and will fail if they do/dont exist
+           */
+        ], { optional: true }),
+        query('.spinner', [
+          useAnimation(spinAnimation, {
+            params: {
+              rotation: '-720deg',
+              fromSize: '1',
+              toSize: '0',
+              time: '800ms',
+              timingFunc: 'ease',
+            },
+          }),
+        ], { optional: true }),
+        query('.shrink', [
+          useAnimation(popAnimation, {
+            params: {
+              fromSize: '1',
+              toSize: '0',
+              time: '800ms',
+              timingFunc: 'cubic-bezier(1, -0.73, .08, 1.82)',
+            },
+          }),
+        ], { optional: true }),
       ], { optional: true }),
+
+      /**
+       * After you have done everything for your :leave animations you
+       * can declare your :enter transitions.
+       * You will do the same thing here with your reusable animations,
+       * just setting your parameters accordingly
+       */
+      query(':enter', [
+        style({ zIndex: 1000 }),
+        query('.slider', [
+          useAnimation(slideAnimation, {
+            params: {
+              from: '-50%',
+              to: '50%',
+              time: '600ms',
+              timingFunc: 'ease',
+            },
+          }),
+        ], { optional: true }),
+        query('.spinner', [
+          useAnimation(spinAnimation, {
+            params: {
+              rotation: '720deg',
+              fromSize: '0',
+              toSize: '1',
+              time: '600ms',
+              timingFunc: 'ease',
+            },
+          }),
+        ], { optional: true }),
+        query('.shrink', [
+          useAnimation(popAnimation, {
+            params: {
+              fromSize: '0',
+              toSize: '1',
+              time: '600ms',
+              timingFunc: 'cubic-bezier(1, -0.73, .08, 1.82)',
+            },
+          }),
+        ], { optional: true }),
+      ], { optional: true }),
+
     ]),
   ]);
 
-// 6-119
