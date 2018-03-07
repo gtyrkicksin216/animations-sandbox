@@ -7,4 +7,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: lightseagreen;
+  /*
+    FOR SOME REASON THE OUTLINE TRANSPARENT NEEDS TO BE ADDED
+    TO AVOID SKIPPING (OR THE EDGES STICKING) ON THE :leave
+    ANIMATION. NOT SURE WHY THIS IS A THING, BUT THIS SEEMS
+    TO BE THE BEST SOLUTION RIGHT NOW. I'D IMAGINE THIS IS
+    A BUG THAT WILL BE FIXED AS TIME GOES ON
+  */
+  outline: 2px solid transparent;
 }
