@@ -155,31 +155,33 @@ export const routerAnimations =
             },
           }),
         ], { optional: true }),
-        // TODO Fix this group running oddly
+
         group([
-          query('.grow-in', [
-            stagger('300ms', [
-              useAnimation(widthAnimation, {
-                params: {
-                  from: '85%',
-                  to: '0',
-                  time: '300ms',
-                  timingFunc: 'ease',
-                },
-              }),
-            ]),
-          ], { optional: true }),
-          query('.child-stagger', [
-            useAnimation(slideTopAnimation, {
+        query('.grow-in', [
+          stagger('200ms', [
+            useAnimation(widthAnimation, {
               params: {
-                from: '50%',
-                to: '150%',
-                time: '800ms',
+                from: '85%',
+                to: '0',
+                time: '600ms',
                 timingFunc: 'ease',
               },
             }),
-          ], { optional: true, delay: '600ms' }),
-        ]),
+          ]),
+        ], { optional: true }),
+
+        query('.child-stagger', [
+          useAnimation(slideTopAnimation, {
+            params: {
+              from: '50%',
+              to: '150%',
+              time: '800ms',
+              timingFunc: 'ease',
+            },
+          }),
+        ], { optional: true }),
+      ]),
+
       ], { optional: true }),
 
       /**
