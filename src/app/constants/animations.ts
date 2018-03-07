@@ -11,6 +11,7 @@ import {
   AnimationOptions,
   group,
   stagger,
+  sequence
 } from '@angular/animations';
 
 /**
@@ -96,6 +97,7 @@ export const routerAnimations =
       query('.slider', style({ left: '-50%' }), { optional: true }),
       query('.spinner', style({ transform: `rotate(0) scale(0)` }), { optional: true }),
       query('.shrink', style({ transform: `scale(0)` }), { optional: true }),
+      // This paramether needs to be set here and then subsiquently in each :enter and :leave call
       query('.child-stagger', style({ top: '-100%' }), { optional: true }),
       query('.grow-in', style({ width: '0' }), { optional: true }),
 
@@ -151,36 +153,71 @@ export const routerAnimations =
               fromSize: '1',
               toSize: '0',
               time: '800ms',
-              timingFunc: 'cubic-bezier(1, -0.73, .08, 1.82)',
+              timingFunc: 'cubic-bezier(.48,-0.27,.43,1.44)',
             },
           }),
         ], { optional: true }),
 
+        /**
+         * Due to some weirdness on the :leave trigger this will need to be set here
+         * to offset the initial :enter state decalred at the top
+         */
+        query('.child-stagger', style({ top: '50%' }), { optional: true }),
+        /**
+         * Using a group will run two animations together
+         */
         group([
-        query('.grow-in', [
-          stagger('200ms', [
-            useAnimation(widthAnimation, {
-              params: {
-                from: '85%',
-                to: '0',
-                time: '600ms',
-                timingFunc: 'ease',
-              },
-            }),
+          /**
+           * However, using a sequence means that the second animation only runs
+           * after the first has finished. This works nicely if you would like to
+           * animate child elements in after the parent has animated
+           */
+          sequence([
+            query('.grow-in', [
+              style({ width: '85%' }),
+              /**
+               * Stagger allows you to be able to add a delay between animations
+               * that run on multiple elements. This is good to use for lists
+               * or elements that are populated with an *ngFor loop,
+               * The time declared first in stagger is put *between* EVERY animation
+               * on each element. So in this example, the width animation runs a
+               * total of 1500ms, since the stagger will run between the first/second
+               * and second/third elements.
+               */
+              stagger('300ms', [
+                useAnimation(widthAnimation, {
+                  params: {
+                    from: '85%',
+                    to: '0',
+                    time: '300ms',
+                    timingFunc: 'cubic-bezier(.48,-0.27,.43,1.44)',
+                  },
+                }),
+              ]),
+            ], { optional: true }),
+            query('.child-stagger', [
+              /**
+               * This animation for some reason was glitchy without statically setting the
+               * initial top position. I don't know why, so don't ask :shrug:.
+               *
+               * Due to this if your animation skips, jumps or flickers, this could be a good
+               * method to stop it from doing that. None of the others required this
+               * but for some reason this needed a declaration outside of the initial one at the
+               * top of the page, as well as these inside of the animation. But only in some
+               * places. This could be a bug, but once again I'm not sure.
+               */
+              style({ top: '50%' }),
+              useAnimation(slideTopAnimation, {
+                params: {
+                  from: '50%',
+                  to: '150%',
+                  time: '600ms',
+                  timingFunc: 'cubic-bezier(.48,-0.27,.43,1.44)',
+                },
+              }),
+            ], { optional: true }),
           ]),
-        ], { optional: true }),
-
-        query('.child-stagger', [
-          useAnimation(slideTopAnimation, {
-            params: {
-              from: '50%',
-              to: '150%',
-              time: '800ms',
-              timingFunc: 'ease',
-            },
-          }),
-        ], { optional: true }),
-      ]),
+        ]),
 
       ], { optional: true }),
 
@@ -220,43 +257,39 @@ export const routerAnimations =
               fromSize: '0',
               toSize: '1',
               time: '600ms',
-              timingFunc: 'cubic-bezier(1, -0.73, .08, 1.82)',
+              timingFunc: 'cubic-bezier(.48,-0.27,.43,1.44)',
             },
           }),
         ], { optional: true }),
-        // query('.child-stagger', [
-          // useAnimation(slideTopAnimation, {
-          //   params: {
-          //     from: '-100%',
-          //     to: '50%',
-          //     time: '600ms',
-          //     timingFunc: 'ease',
-          //   },
-          // }),
-        // ], { optional: true }),
+
+        query('.child-stagger', style({ top: '-100%' }), { optional: true }),
         group([
-          query('.child-stagger', [
-            useAnimation(slideTopAnimation, {
-              params: {
-                from: '-100%',
-                to: '50%',
-                time: '600ms',
-                timingFunc: 'ease',
-              },
-            }),
-          ], { optional: true }),
-          query('.grow-in', [
-            stagger('300ms', [
-              useAnimation(widthAnimation, {
+          sequence([
+            query('.child-stagger', [
+              style({ top: '-100%' }),
+              useAnimation(slideTopAnimation, {
                 params: {
-                  from: '0',
-                  to: '85%',
-                  time: '300ms',
-                  timingFunc: 'ease',
+                  from: '-100%',
+                  to: '50%',
+                  time: '600ms',
+                  timingFunc: 'cubic-bezier(.48,-0.27,.43,1.44)',
                 },
               }),
-            ]),
-          ], { optional: true, delay: '600ms' }),
+            ], { optional: true }),
+            query('.grow-in', [
+              // style({ width: 0 }),
+              stagger('300ms', [
+                useAnimation(widthAnimation, {
+                  params: {
+                    from: '0',
+                    to: '85%',
+                    time: '300ms',
+                    timingFunc: 'cubic-bezier(.48,-0.27,.43,1.44)',
+                  },
+                }),
+              ]),
+            ], { optional: true }),
+          ]),
         ]),
       ], { optional: true }),
 
